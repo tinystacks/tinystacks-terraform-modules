@@ -24,7 +24,9 @@ resource "aws_route_table" "ts_aws_route_table_public_igw" {
 }
 
 resource "aws_route_table_association" "ts_aws_route_table_association_public_igw" {
+
   for_each       = aws_subnet.ts_aws_subnet_public_igw
+
   subnet_id      = each.value.id
   route_table_id = aws_route_table.ts_aws_route_table_public_igw.id
 }
@@ -52,34 +54,44 @@ resource "aws_subnet" "ts_aws_subnet_private_ngw" {
 }
 
 resource "aws_route_table" "ts_aws_route_table_private_ngw" {
+
+  for_each = var.ts_private_ngw_cidr_blocks
+
   vpc_id = aws_vpc.ts_aws_vpc.id
-  tags   = var.ts_aws_route_table_private_ngw_tags
 }
 
 resource "aws_route_table_association" "ts_aws_route_table_association_private_ngw" {
 
-  for_each = aws_subnet.ts_aws_subnet_private_ngw
+  for_each = var.ts_private_ngw_cidr_blocks
 
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.ts_aws_route_table_private_ngw.id
+  subnet_id      = aws_subnet.ts_aws_subnet_private_ngw[each.key].id
+  route_table_id = aws_route_table.ts_aws_route_table_private_ngw[each.key].id
 }
 
 resource "aws_eip" "ts_aws_eip_nat" {
+
+  for_each = var.ts_private_ngw_cidr_blocks
+
   vpc = true
 }
 
 resource "aws_nat_gateway" "ts_aws_nat_gateway" {
-  subnet_id     = aws_subnet.ts_aws_subnet_public_igw[keys(var.ts_public_igw_cidr_blocks)[0]].id
-  allocation_id = aws_eip.ts_aws_eip_nat.id
-  tags          = var.ts_aws_nat_gateway_tags
+
+  for_each = var.ts_private_ngw_cidr_blocks
+
+  subnet_id     = aws_subnet.ts_aws_subnet_private_ngw[each.key].id
+  allocation_id = aws_eip.ts_aws_eip_nat[each.key].id
 
   depends_on    = [aws_internet_gateway.ts_aws_internet_gateway]
 }
 
 resource "aws_route" "ts_aws_route_private_ngw" {
-  route_table_id         = aws_route_table.ts_aws_route_table_private_ngw.id
+
+  for_each = var.ts_private_ngw_cidr_blocks
+
+  route_table_id         = aws_route_table.ts_aws_route_table_private_ngw[each.key].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.ts_aws_nat_gateway.id
+  nat_gateway_id         = aws_nat_gateway.ts_aws_nat_gateway[each.key].id
 }
 
 /* */

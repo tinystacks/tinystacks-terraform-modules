@@ -58,22 +58,6 @@ variable "ts_private_ngw_cidr_blocks" {
   }
 }
 
-variable "ts_aws_route_table_private_ngw_tags" {
-  description = "TinyStacks AWS Route Table Private NGW tags"
-  type        = map
-  default     = {
-    "Name" = "ts private ngw"
-  }
-}
-
-variable "ts_aws_nat_gateway_tags" {
-  description = "TinyStacks AWS NAT Gateway tags"
-  type        = map
-  default     = {
-    "Name" = "ts ngw"
-  }
-}
-
 /* */
 
 variable "ts_private_airgap_cidr_blocks" {

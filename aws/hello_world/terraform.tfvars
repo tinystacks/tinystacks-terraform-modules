@@ -21,12 +21,6 @@ hello_world_private_ngw_cidr_blocks = {
   "us-east-1d" = 5
   "us-east-1f" = 6
 }
-hello_world_aws_route_table_private_ngw_tags = {
-  "Name" = "ts private ngw"
-}
-hello_world_aws_nat_gateway_tags = {
-  "Name" = "ts ngw"
-}
 
 hello_world_private_airgap_cidr_blocks = {
   "us-east-1b" = 7

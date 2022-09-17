@@ -20,15 +20,11 @@ module "ts_aws_vpc_hello_world" {
   ts_aws_vpc_cidr_block   = var.hello_world_aws_vpc_cidr_block
   ts_aws_vpc_cidr_newbits = var.hello_world_aws_vpc_cidr_newbits
 
-
   ts_public_igw_cidr_blocks          = var.hello_world_public_igw_cidr_blocks
   ts_aws_route_table_public_igw_tags = var.hello_world_aws_route_table_public_igw_tags
   ts_aws_internet_gateway_tags       = var.hello_world_aws_internet_gateway_tags
 
- 
   ts_private_ngw_cidr_blocks          = var.hello_world_private_ngw_cidr_blocks
-  ts_aws_route_table_private_ngw_tags = var.hello_world_aws_route_table_private_ngw_tags
-  ts_aws_nat_gateway_tags             = var.hello_world_aws_nat_gateway_tags
 
   ts_private_airgap_cidr_blocks             = var.hello_world_private_airgap_cidr_blocks
   ts_aws_route_table_private_airgap_tags = var.hello_world_aws_route_table_private_airgap_tags

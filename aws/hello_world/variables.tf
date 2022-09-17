@@ -65,22 +65,6 @@ variable "hello_world_private_ngw_cidr_blocks" {
   }
 }
 
-variable "hello_world_aws_route_table_private_ngw_tags" {
-  description = "Hello World AWS Route Table Private NGW tags"
-  type        = map
-  default     = {
-    "Name" = "ts private ngw"
-  }
-}
-
-variable "hello_world_aws_nat_gateway_tags" {
-  description = "Hello World AWS NAT Gateway tags"
-  type        = map
-  default     = {
-    "Name" = "ts ngw"
-  }
-}
-
 /* */
 
 variable "hello_world_private_airgap_cidr_blocks" {

@@ -11,7 +11,6 @@ terraform {
 
 provider "aws" {
   region  = var.hello_world_aws_region
-  profile = var.hello_world_aws_profile
 }
 
 module "ts_aws_vpc_hello_world" {

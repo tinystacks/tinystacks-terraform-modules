@@ -3,11 +3,6 @@ variable "hello_world_aws_region" {
   type        = string
 }
 
-variable "hello_world_aws_profile" {
-  description = "Hello World AWS profile"
-  type        = string
-}
-
 /* */
 
 variable "hello_world_aws_vpc_name" {

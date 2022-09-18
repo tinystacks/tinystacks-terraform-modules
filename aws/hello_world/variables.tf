@@ -5,12 +5,6 @@ variable "hello_world_aws_region" {
 
 /* */
 
-variable "hello_world_aws_vpc_name" {
-  description = "Hello World AWS VPC Name"
-  type        = string
-  default     = "ts_vpc"
-}
-
 variable "hello_world_aws_vpc_cidr_block" {
   description = "Hello World AWS VPC CIDR block"
   type        = string
@@ -33,22 +27,6 @@ variable "hello_world_public_igw_cidr_blocks" {
     "us-east-1b" = 1
     "us-east-1d" = 2
     "us-east-1f" = 3
-  }
-}
-
-variable "hello_world_aws_route_table_public_igw_tags" {
-  description = "Hello World AWS Route Table Public IGW tags"
-  type        = map
-  default     = {
-    "Name" = "ts public igw"
-  }
-}
-
-variable "hello_world_aws_internet_gateway_tags" {
-  description = "Hello World AWS Internet Gateway tags"
-  type        = map
-  default     = {
-    "Name" = "ts igw"
   }
 }
 
@@ -78,10 +56,61 @@ variable "hello_world_private_airgap_cidr_blocks" {
   }
 }
 
-variable "hello_world_aws_route_table_private_airgap_tags" {
-  description = "Hello World AWS Route Table Private airgap tags"
-  type        = map
-  default     = {
-    "Name" = "ts private airgap"
-  }
+/* */
+
+variable "hello_world_vpc_security_group_rules" {
+  description = "Hello World VPC Security Group rules"
+
+  type = list(object({
+    rule_type   = string
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+
+  default = [
+    {
+      rule_type   = "ingress"
+      description = "Ping"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "ICMP"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      rule_type   = "egress"
+      description = "Outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
+/* */
+
+variable "hello_world_aws_ami_filter_name_values" {
+  description = "Hello World AWS AMI filter name:values"
+  type        = list(string)
+  default     = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"] 
+}
+
+variable "hello_world_aws_ami_owners" {
+  description = "Hello World AWS AMI owners"
+  type        = list(string)
+  default     = ["099720109477"] 
+}
+
+variable "hello_world_aws_instance_type" {
+  description = "Hello World AWS Instance type"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "hello_world_aws_instance_key_name" {
+  description = "Hello World AWS Instance Key Name"
+  type        = string
 }

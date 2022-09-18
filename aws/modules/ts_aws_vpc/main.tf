@@ -1,10 +1,9 @@
 resource "aws_vpc" "ts_aws_vpc" {
+
   cidr_block           = var.ts_aws_vpc_cidr_block
   instance_tenancy     = "default"
   enable_dns_hostnames = true
-  tags = {
-    Name = var.ts_aws_vpc_name
-  }
+
 }
 
 /* */
@@ -16,11 +15,14 @@ resource "aws_subnet" "ts_aws_subnet_public_igw" {
   vpc_id            = aws_vpc.ts_aws_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ts_aws_vpc.cidr_block, var.ts_aws_vpc_cidr_newbits, each.value)
   availability_zone = each.key
+
+  map_public_ip_on_launch = true
 }
 
 resource "aws_route_table" "ts_aws_route_table_public_igw" {
+
   vpc_id = aws_vpc.ts_aws_vpc.id
-  tags   = var.ts_aws_route_table_public_igw_tags
+
 }
 
 resource "aws_route_table_association" "ts_aws_route_table_association_public_igw" {
@@ -32,8 +34,9 @@ resource "aws_route_table_association" "ts_aws_route_table_association_public_ig
 }
 
 resource "aws_internet_gateway" "ts_aws_internet_gateway" {
+
   vpc_id = aws_vpc.ts_aws_vpc.id
-  tags   = var.ts_aws_internet_gateway_tags
+
 }
 
 resource "aws_route" "ts_aws_route_public_igw" {
@@ -79,7 +82,7 @@ resource "aws_nat_gateway" "ts_aws_nat_gateway" {
 
   for_each = var.ts_private_ngw_cidr_blocks
 
-  subnet_id     = aws_subnet.ts_aws_subnet_private_ngw[each.key].id
+  subnet_id     = aws_subnet.ts_aws_subnet_public_igw[each.key].id
   allocation_id = aws_eip.ts_aws_eip_nat[each.key].id
 
   depends_on    = [aws_internet_gateway.ts_aws_internet_gateway]
@@ -106,8 +109,9 @@ resource "aws_subnet" "ts_aws_subnet_private_airgap" {
 }
 
 resource "aws_route_table" "ts_aws_route_table_private_airgap" {
+
   vpc_id = aws_vpc.ts_aws_vpc.id
-  tags   = var.ts_aws_route_table_private_airgap_tags
+
 }
 
 resource "aws_route_table_association" "ts_aws_route_table_association_private_airgap" {
@@ -117,6 +121,3 @@ resource "aws_route_table_association" "ts_aws_route_table_association_private_a
   subnet_id      = each.value.id
   route_table_id = aws_route_table.ts_aws_route_table_private_airgap.id
 }
-
-/* */
-

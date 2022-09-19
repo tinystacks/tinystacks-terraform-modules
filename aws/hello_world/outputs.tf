@@ -42,3 +42,8 @@ output "hello_world_aws_instance_private_airgap_private_ip_map" {
     each_instance.ts_aws_instance_id => each_instance.ts_aws_instance_private_ip
   }
 }
+
+output "acme_api_aws_alb_url" {
+  description = "TinyStacks AWS ALB URL"
+  value = "http://${module.acme_api_aws_alb.ts_aws_alb_dns_name}"
+}

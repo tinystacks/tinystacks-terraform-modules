@@ -44,11 +44,18 @@ resource "aws_ecs_service" "ts_aws_ecs_service" {
   name               = var.ts_aws_ecs_service_name
   task_definition    = aws_ecs_task_definition.ts_aws_ecs_task_definition.arn
   launch_type        = var.ts_aws_ecs_service_launch_type
-  cluster            = var.ts_aws_ecs_cluster_id
+  cluster            = var.ts_aws_ecs_service_cluster
+  desired_count      = var.ts_aws_ecs_service_desired_count
 
   network_configuration {
     subnets         = var.ts_aws_ecs_service_subnets
     security_groups = var.ts_aws_ecs_service_security_groups
+  }
+
+  load_balancer {
+    target_group_arn = var.ts_aws_ecs_service_load_balancer_target_group_arn
+    container_name   = var.ts_aws_ecs_service_name
+    container_port   = var.ts_aws_ecs_service_load_balancer_container_port
   }
 
 } 

@@ -1,11 +1,11 @@
 resource "aws_security_group" "ts_aws_security_group" {
  
-  vpc_id = var.ts_aws_vpc_id
+  vpc_id = var.ts_aws_security_group_vpc_id
 
 }
 
 resource "aws_security_group_rule" "ts_aws_security_group_rule" {
-  for_each = {for sg in var.ts_vpc_security_group_rules:  sg.description => sg}
+  for_each = {for sg in var.ts_aws_security_group_rules:  sg.description => sg}
 
   type        = each.value.rule_type
   description = each.value.description

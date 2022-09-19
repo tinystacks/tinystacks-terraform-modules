@@ -123,8 +123,16 @@ variable "acme_aws_ecs_cluster_name" {
   default     = "acme"
 }
 
-variable "acme_api_vpc_security_group_rules" {
-  description = "Acme API VPC Security Group rules"
+variable "acme_api_aws_ecs_service_name" {
+  description = "Acme API AWS ECS Service Name"
+  type        = string
+  default     = "acme-api"
+}
+
+/* */
+
+variable "acme_api_alb_aws_security_group_rules" {
+  description = "Acme API ALB AWS Security Group rules"
 
   type = list(object({
     rule_type   = string
@@ -153,6 +161,92 @@ variable "acme_api_vpc_security_group_rules" {
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
+      rule_type   = "egress"
+      description = "Outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
+variable "acme_api_aws_alb_internal" {
+  description = "Acme API AWS ALB internal"
+  type        = bool
+  default     = false
+}
+
+variable "acme_api_aws_alb_load_balancer_type" {
+  description = "Acme API AWS ALB load balancer type"
+  type        = string
+  default     = "application"
+}
+
+variable "acme_api_aws_lb_target_group_port" {
+  description = "Acme API AWS LB target group port"
+  type        = number
+  default     = 3000
+}
+
+variable "acme_api_aws_lb_target_group_protocol" {
+  description = "Acme API AWS LB target group protocol"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "acme_api_aws_lb_target_group_target_type" {
+  description = "Acme API AWS LB target group target type"
+  type        = string
+  default     = "ip"
+}
+
+variable "acme_api_aws_lb_target_group_health_check_enabled" {
+  description = "Acme API AWS LB target group health check enabled"
+  type        = bool
+  default     = true
+}
+
+variable "acme_api_aws_lb_target_group_health_check_path" {
+  description = "Acme API AWS LB target group health check path"
+  type        = string
+  default     = "/health"
+}
+
+variable "acme_api_aws_alb_listener_port" {
+  description = "Acme API AWS ALB listener port"
+  type        = string
+  default     = "80"
+}
+
+variable "acme_api_aws_alb_listener_protocol" {
+  description = "Acme API AWS ALB listener protocol"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "acme_api_aws_alb_listener_default_action_type" {
+  description = "Acme API AWS ALB listener default action type"
+  type        = string
+  default     = "forward"
+}
+
+/* */
+
+variable "acme_api_aws_security_group_rules" {
+  description = "Acme API AWS Security Group rules"
+
+  type = list(object({
+    rule_type   = string
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+
+  default = [
+    {
       rule_type   = "ingress"
       description = "acme-api"
       from_port   = 3000
@@ -171,20 +265,14 @@ variable "acme_api_vpc_security_group_rules" {
   ]
 }
 
-variable "acme_api_aws_ecs_service_name" {
-  description = "Acme API AWS ECS Service Name"
-  type        = string
-  default     = "acme-api"
-}
-
 variable "acme_api_aws_ecs_service_launch_type" {
-  description = "Acme AWS ECS Service launch type"
+  description = "Acme API AWS ECS Service launch type"
   type        = string
   default     = "FARGATE"
 }
 
 variable "acme_api_aws_ecs_task_definition_container_definitions" {
-  description = "Acme AWS ECS task definition container definitions"
+  description = "Acme API AWS ECS task definition container definitions"
   type        = string
   default     = <<EOF
   [
@@ -210,25 +298,31 @@ variable "acme_api_aws_ecs_task_definition_container_definitions" {
 }
 
 variable "acme_api_aws_ecs_task_definition_cpu" {
-  description = "Acme AWS ECS task definition cpu"
+  description = "Acme API AWS ECS task definition cpu"
   type        = number
   default     = 256
 }
 
 variable "acme_api_aws_ecs_task_definition_memory" {
-  description = "Acme AWS ECS task definition memory"
+  description = "Acme API AWS ECS task definition memory"
   type        = number
   default     = 512
 }
 
 variable "acme_api_aws_ecs_task_definition_requires_compatibilities" {
-  description = "Acme AWS ECS task definition requires compatibilities"
+  description = "Acme API AWS ECS task definition requires compatibilities"
   type        = list(string)
   default     = ["FARGATE"]
 }
 
+variable "acme_api_aws_ecs_service_desired_count" {
+  description = "Acme API AWS ECS service desired count"
+  type        = number
+  default     = 1
+}
+
 variable "acme_api_aws_iam_role_ecs_task_execution_role_name" {
-  description = "Acme AWS IAM role ECS task execution role name"
+  description = "Acme API AWS IAM role ECS task execution role name"
   type        = string
   default     = "ecs-task-execution-role"
 }

@@ -1,9 +1,9 @@
-variable "ts_aws_vpc_id" {
+variable "ts_aws_security_group_vpc_id" {
   description = "TinyStacks AWS VPC ID"
   type        = string
 }
 
-variable "ts_vpc_security_group_rules" {
+variable "ts_aws_security_group_rules" {
   description = "TinyStacks VPC Security Group rules"
 
   type = list(object({

@@ -52,3 +52,41 @@ hello_world_aws_ami_filter_name_values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20
 hello_world_aws_ami_owners = ["099720109477"]
 hello_world_aws_instance_type = "t2.micro"
 hello_world_aws_instance_key_name = "tinystacks_terraform_aj"
+
+acme_aws_ecs_cluster_name = "acme"
+acme_api_aws_ecs_service_name = "acme-api"
+
+acme_api_vpc_security_group_rules = [
+  {
+    rule_type   = "ingress"
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  {
+    rule_type   = "ingress"
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  {
+    rule_type   = "ingress"
+    description = "acme-api"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  {
+    rule_type   = "egress"
+    description = "Outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+]

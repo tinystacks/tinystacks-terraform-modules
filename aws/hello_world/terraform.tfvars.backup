@@ -15,7 +15,7 @@ hello_world_private_ngw_cidr_blocks = {
   "us-east-1f" = 6
 }
 
-hello_world_private_airgap_cidr_blocks = {
+hello_world_private_isolated_cidr_blocks = {
   "us-east-1b" = 7
   "us-east-1d" = 8
   "us-east-1f" = 9

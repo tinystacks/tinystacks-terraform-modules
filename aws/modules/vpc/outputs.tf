@@ -19,10 +19,10 @@ output "ts_aws_subnet_private_ngw_map" {
   }
 }
 
-output "ts_aws_subnet_private_airgap_map" {
-  description = "TinyStacks AWS Subnet Private airgap ID and block"
+output "ts_aws_subnet_private_isolated_map" {
+  description = "TinyStacks AWS Subnet Private isolated ID and block"
   value = {
-    for subnet in aws_subnet.ts_aws_subnet_private_airgap :
+    for subnet in aws_subnet.ts_aws_subnet_private_isolated :
     subnet.availability_zone => subnet.id
   }
 }

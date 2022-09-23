@@ -99,25 +99,25 @@ resource "aws_route" "ts_aws_route_private_ngw" {
 
 /* */
 
-resource "aws_subnet" "ts_aws_subnet_private_airgap" {
+resource "aws_subnet" "ts_aws_subnet_private_isolated" {
 
-  for_each = var.ts_private_airgap_cidr_blocks
+  for_each = var.ts_private_isolated_cidr_blocks
 
   vpc_id            = aws_vpc.ts_aws_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ts_aws_vpc.cidr_block, var.ts_aws_vpc_cidr_newbits, each.value)
   availability_zone = each.key
 }
 
-resource "aws_route_table" "ts_aws_route_table_private_airgap" {
+resource "aws_route_table" "ts_aws_route_table_private_isolated" {
 
   vpc_id = aws_vpc.ts_aws_vpc.id
 
 }
 
-resource "aws_route_table_association" "ts_aws_route_table_association_private_airgap" {
+resource "aws_route_table_association" "ts_aws_route_table_association_private_isolated" {
 
-  for_each = aws_subnet.ts_aws_subnet_private_airgap
+  for_each = aws_subnet.ts_aws_subnet_private_isolated
 
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.ts_aws_route_table_private_airgap.id
+  route_table_id = aws_route_table.ts_aws_route_table_private_isolated.id
 }

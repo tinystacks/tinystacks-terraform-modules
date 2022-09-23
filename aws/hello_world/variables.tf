@@ -45,9 +45,9 @@ variable "hello_world_private_ngw_cidr_blocks" {
 
 /* */
 
-variable "hello_world_private_airgap_cidr_blocks" {
+variable "hello_world_private_isolated_cidr_blocks" {
   type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Private airgap subnets"
+  description = "Hello World Availability Zone CIDR Mapping for Private isolated subnets"
  
   default = {
     "us-east-1b" = 7

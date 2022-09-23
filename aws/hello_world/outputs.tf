@@ -13,9 +13,9 @@ output "hello_world_aws_subnet_private_ngw_map" {
   value       = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map
 }
 
-output "hello_world_aws_subnet_private_airgap_map" {
-  description = "Hello World AWS Subnet Private airgap ID"
-  value       = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_airgap_map
+output "hello_world_aws_subnet_private_isolated_map" {
+  description = "Hello World AWS Subnet Private isolated ID"
+  value       = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_isolated_map
 }
 
 
@@ -35,10 +35,10 @@ output "hello_world_aws_instance_private_ngw_private_ip_map" {
   }
 }
 
-output "hello_world_aws_instance_private_airgap_private_ip_map" {
-  description = "Hello World AWS Instance private airgap private IP"
+output "hello_world_aws_instance_private_isolated_private_ip_map" {
+  description = "Hello World AWS Instance private isolated private IP"
   value = {
-    for each_instance in module.hello_world_aws_instance_private_airgap :
+    for each_instance in module.hello_world_aws_instance_private_isolated :
     each_instance.ts_aws_instance_id => each_instance.ts_aws_instance_private_ip
   }
 }

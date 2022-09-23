@@ -34,9 +34,9 @@ variable "ts_private_ngw_cidr_blocks" {
   }
 }
 
-variable "ts_private_airgap_cidr_blocks" {
+variable "ts_private_isolated_cidr_blocks" {
   type = map(number)
-  description = "TinyStacks Availability Zone CIDR Mapping for Private airgap subnets"
+  description = "TinyStacks Availability Zone CIDR Mapping for Private isolated subnets"
  
   default = {
     "us-east-1b" = 7

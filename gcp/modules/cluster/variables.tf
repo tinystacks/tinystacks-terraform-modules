@@ -1,9 +1,19 @@
-variable "cluster_name" {}
+variable "cluster_name" {
+  type    = string
+}
 
-variable "region" {}
+variable "region" {
+  type    = string
+}
 
-variable "cluster_network" {}
+variable "cluster_network" {
+  type    = string
+}
 
-variable "enable_private_endpoint" {}
+variable "enable_private_endpoint" {
+  type    = bool
+}
 
-variable "enable_private_nodes" {}
+variable "enable_private_nodes" {
+  type    = bool
+}

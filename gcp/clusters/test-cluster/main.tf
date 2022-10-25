@@ -5,6 +5,8 @@ module "cluster" {
   cluster_name    = var.cluster_name
   region          = var.region
   cluster_network = var.cluster_network
+  enable_private_endpoint = var.enable_private_endpoint
+  enable_private_nodes = var.enable_private_nodes
 }
 
 module "node_pool_1" {

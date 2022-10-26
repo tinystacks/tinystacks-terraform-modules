@@ -15,6 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Git tag and release
+      id: git_tag_and_release
       run: |
         git config --global user.email "zaydsimjee@gmail.com"
         git config --global user.name "Zayd Simjee"
@@ -25,18 +26,16 @@ jobs:
         if [ -z "$latestVersionTag" ]; then echo "No version tags on the repository! Defaulting to 0.0.0..."; fi
         echo "latestVersionTag: $latestVersionTag"
         currentVersion=${latestVersionTag:-0.0.0}
-        export newVersion=$(bash .github/workflows/incrementVersion.sh $currentVersion $changeType)
-        echo "Step: Git tag and release"
-        echo "newVersion: $newVersion"
+        newVersion=$(bash .github/workflows/incrementVersion.sh $currentVersion $changeType)
         git tag $newVersion
         git push origin --tags
         gh release create $newVersion --title $newVersion --notes-file RELEASENOTES.md
+        echo "::set-output name=newVersion::$(echo ${newVersion})"
       env:
         GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
     - name: Submit PR for version change and CHANGELOG
       run: |
-        echo "Step: Submit PR for version change and CHANGELOG"
-        echo "newVersion: $newVersion"
+        newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
         git checkout -b "$newVersion"
         previousChangeLog=$(cat CHANGELOG.md)
         echo "$newVersion" > CHANGELOG.md
@@ -54,6 +53,7 @@ jobs:
         GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
     - name: Approve version change PR and merge
       run: |
+        newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
         echo "Step: Approve version change PR and merge"
         echo "newVersion: $newVersion"
         git config --global user.email "caleb.courier@gmail.com"

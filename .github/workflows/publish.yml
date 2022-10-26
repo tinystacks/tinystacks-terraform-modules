@@ -1,0 +1,56 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Publish CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Submit PR for version change
+      run: |
+        git config --global user.email "zaydsimjee@gmail.com"
+        git config --global user.name "Zayd Simjee"
+        changeType=$(<.version-change-type)
+        if [ -z "$changeType" ]; then echo "Missing file: .version-change-type!"; exit 1; fi
+        latestVersionTag=$(git tag --sort=committerdate | tail -1)
+        echo "No version tags on the repository! Defaulting to 0.0.0..."
+        currentVersion=${latestVersionTag:-0.0.0}
+        newVersion=$(.github/workflows/incrementVersion.sh $currentVersion $changeType)
+        git tag $newVersion
+        git push origin --tags
+        gh release create $newVersion --title $newVersion --notes-file RELEASENOTES.md
+      env:
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
+    - name: Submit PR for version change and CHANGELOG
+      run: |
+        git checkout -b "$newVersion"
+        previousChangeLog=$(cat CHANGELOG.md)
+        echo "$newVersion" > CHANGELOG.md
+        echo "---" >> CHANGELOG.md
+        echo "$(cat RELEASENOTES.md)" >> CHANGELOG.md
+        echo " " >> CHANGELOG.md
+        echo "$previousChangeLog" >> CHANGELOG.md
+        echo "$newVersion" > .version
+        git add CHANGELOG.md
+        git add .version
+        git commit -m "version $newVersion [skip ci]"
+        git push --set-upstream origin "$newVersion"
+        gh pr create --title "$newVersion" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+      env:
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
+    - name: Approve version change PR and merge
+      run: |
+        git config --global user.email "caleb.courier@gmail.com"
+        git config --global user.name "Caleb Courier"
+        gh pr review "$newVersion" --approve
+        gh pr merge "$newVersion" --admin --squash
+      env:
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}

@@ -36,7 +36,7 @@ jobs:
     - name: Submit PR for version change and CHANGELOG
       run: |
         newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
-        git checkout -b "$newVersion"
+        git checkout -b "v$newVersion"
         previousChangeLog=$(cat CHANGELOG.md)
         echo "$newVersion" > CHANGELOG.md
         echo "---" >> CHANGELOG.md
@@ -47,8 +47,8 @@ jobs:
         git add CHANGELOG.md
         git add .version
         git commit -m "version $newVersion [skip ci]"
-        git push --set-upstream origin "$newVersion"
-        gh pr create --title "$newVersion" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+        git push --set-upstream origin "v$newVersion"
+        gh pr create --title "v$newVersion" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
       env:
         GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
     - name: Approve version change PR and merge

@@ -28,7 +28,7 @@ jobs:
         git push origin --tags
         gh release create $newVersion --title $newVersion --notes-file RELEASENOTES.md
       env:
-        GH_TOKEN: ${{ secrets.TS_GH_BOT }}
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
     - name: Submit PR for version change and CHANGELOG
       run: |
         git checkout -b "$newVersion"
@@ -45,7 +45,7 @@ jobs:
         git push --set-upstream origin "$newVersion"
         gh pr create --title "$newVersion" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}
     - name: Approve version change PR and merge
       run: |
         git config --global user.email "caleb.courier@gmail.com"
@@ -53,4 +53,4 @@ jobs:
         gh pr review "$newVersion" --approve
         gh pr merge "$newVersion" --admin --squash
       env:
-        GH_TOKEN: ${{ secrets.APPROVER_TOKEN }}
+        GH_TOKEN: ${{ secrets.TEMP_TOKEN }}

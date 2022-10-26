@@ -23,7 +23,7 @@ jobs:
         latestVersionTag=$(git tag --sort=committerdate | tail -1)
         echo "No version tags on the repository! Defaulting to 0.0.0..."
         currentVersion=${latestVersionTag:-0.0.0}
-        newVersion=$(./incrementVersion.sh $currentVersion $changeType)
+        newVersion=$(.github/workflows/incrementVersion.sh $currentVersion $changeType)
         git tag $newVersion
         git push origin --tags
         gh release create $newVersion --title $newVersion --notes-file RELEASENOTES.md

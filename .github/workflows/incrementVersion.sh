@@ -21,7 +21,7 @@ elif [[ "$2" == "patch" ]]; then
 elif [[ "$2" == "major" ]]; then
   major=$(echo $major + 1 | bc)
 else
-  echo "usage: ./version.sh version_number [major/feature/bug]"
+  echo "usage: .github/workflows/incrementVersion.sh version_number [major/feature/bug]"
   exit -1
 fi
 

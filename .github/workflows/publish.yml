@@ -58,7 +58,7 @@ jobs:
         echo "newVersion: $newVersion"
         git config --global user.email "caleb.courier@gmail.com"
         git config --global user.name "Caleb Courier"
-        gh pr review "$newVersion" --approve
-        gh pr merge "$newVersion" --admin --squash
+        gh pr review "v$newVersion" --approve
+        gh pr merge "v$newVersion" --admin --squash
       env:
         GH_TOKEN: ${{ secrets.TEMP_TOKEN }}

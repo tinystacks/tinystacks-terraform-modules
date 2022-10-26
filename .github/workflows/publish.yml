@@ -21,7 +21,8 @@ jobs:
         changeType=$(<.version-change-type)
         if [ -z "$changeType" ]; then echo "Missing file: .version-change-type!"; exit 1; fi
         latestVersionTag=$(git tag --sort=committerdate | tail -1)
-        echo "No version tags on the repository! Defaulting to 0.0.0..."
+        if [ -z "latestVersionTag" ]; then echo "No version tags on the repository! Defaulting to 0.0.0..."; fi
+        echo "latestVersionTag: $latestVersionTag"
         currentVersion=${latestVersionTag:-0.0.0}
         newVersion=$(bash .github/workflows/incrementVersion.sh $currentVersion $changeType)
         echo "Step: Git tag and release"

@@ -1,3 +1,7 @@
+0.5.0
+---
+Initial release
+ 
 0.3.0
 ---
 Initial release

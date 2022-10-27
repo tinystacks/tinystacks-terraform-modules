@@ -46,8 +46,10 @@ jobs:
         echo "$(cat RELEASENOTES.md)" >> CHANGELOG.md
         echo " " >> CHANGELOG.md
         echo "$previousChangeLog" >> CHANGELOG.md
+        echo "" > RELEASENOTES.md
         echo "$newVersion" > .version
         git add CHANGELOG.md
+        git add RELEASENOTES.md
         git add .version
         git commit -m "version $newVersion [skip ci]"
         git push --set-upstream origin "$branchName"

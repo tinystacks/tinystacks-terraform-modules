@@ -48,7 +48,7 @@ jobs:
         git add .version
         git commit -m "version $newVersion [skip ci]"
         git push --set-upstream origin "v$newVersion"
-        gh pr create --title "v$newVersion" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+        gh pr create --title "v$newVersion [skip ci]" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
       env:
         GH_TOKEN: ${{ secrets.TS_GH_BOT }}
     - name: Approve version change PR and merge
@@ -58,7 +58,7 @@ jobs:
         echo "newVersion: $newVersion"
         git config --global user.email "smohiuddin@gmail.com"
         git config --global user.name "Safeer Mohiuddin"
-        gh pr review "v$newVersion" --approve
-        gh pr merge "v$newVersion" --admin --squash
+        gh pr review "v$newVersion [skip ci]" --approve
+        gh pr merge "v$newVersion [skip ci]" --admin --squash
       env:
         GH_TOKEN: ${{ secrets.SAFEER_APPROVER_BOT }}

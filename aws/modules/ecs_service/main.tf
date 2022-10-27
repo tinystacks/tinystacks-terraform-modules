@@ -54,7 +54,7 @@ resource "aws_ecs_service" "ts_aws_ecs_service" {
 
   load_balancer {
     target_group_arn = var.ts_aws_ecs_service_load_balancer_target_group_arn
-    container_name   = var.ts_aws_ecs_service_name
+    container_name   = var.ts_aws_ecs_container_name
     container_port   = var.ts_aws_ecs_service_load_balancer_container_port
   }
 

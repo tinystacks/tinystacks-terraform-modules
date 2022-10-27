@@ -34,9 +34,12 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.TS_GH_BOT }}
     - name: Submit PR for version change and CHANGELOG
+      id: submit_pr
       run: |
         newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
-        git checkout -b "v$newVersion"
+        branchName="v$newVersion"
+        echo "::set-output name=branchName::$(echo ${branchName})"
+        git checkout -b "$branchName"
         previousChangeLog=$(cat CHANGELOG.md)
         echo "$newVersion" > CHANGELOG.md
         echo "---" >> CHANGELOG.md
@@ -47,19 +50,19 @@ jobs:
         git add CHANGELOG.md
         git add .version
         git commit -m "version $newVersion [skip ci]"
-        git push --set-upstream origin "v$newVersion"
-        gh pr create --title "v$newVersion [skip ci]" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+        git push --set-upstream origin "$branchName"
+        prTitle="$branchName [skip ci]"
+        gh pr create --title "$prTitle" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
         sleep 5s
       env:
         GH_TOKEN: ${{ secrets.TS_GH_BOT }}
     - name: Approve version change PR and merge
       run: |
         newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
-        echo "Step: Approve version change PR and merge"
-        echo "newVersion: $newVersion"
+        branchName="${{ steps.submit_pr.outputs.branchName }}"
         git config --global user.email "smohiuddin@gmail.com"
         git config --global user.name "Safeer Mohiuddin"
-        gh pr review "v$newVersion [skip ci]" --approve
-        gh pr merge "v$newVersion [skip ci]" --admin --squash
+        gh pr review "$branchName" --approve
+        gh pr merge "$branchName" --admin --squash
       env:
         GH_TOKEN: ${{ secrets.SAFEER_APPROVER_BOT }}

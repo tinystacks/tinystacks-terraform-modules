@@ -49,6 +49,7 @@ jobs:
         git commit -m "version $newVersion [skip ci]"
         git push --set-upstream origin "v$newVersion"
         gh pr create --title "v$newVersion [skip ci]" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+        sleep 5s
       env:
         GH_TOKEN: ${{ secrets.TS_GH_BOT }}
     - name: Approve version change PR and merge

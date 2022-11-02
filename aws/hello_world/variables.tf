@@ -327,4 +327,108 @@ variable "acme_api_aws_iam_role_ecs_task_execution_role_name" {
   default     = "ecs-task-execution-role"
 }
 
-/* */
+/* RDS */
+
+variable "hello_world_aws_db_vpc_security_group_rules" {
+  description = "Hello World AWS DB Security Group rules"
+
+  type = list(object({
+    rule_type   = string
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+
+  default = [
+    {
+      rule_type   = "ingress"
+      description = "Postgres"
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      rule_type   = "egress"
+      description = "Outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
+variable "hello_world_aws_db_instance_identifier_name" {
+  description = "Hello World AWS DB Instance idendifier name"
+  type        = string
+  default     = "hwdb1"
+}
+
+variable "hello_world_aws_db_instance_class" {
+  description = "Hello World AWS DB Instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "hello_world_aws_db_instance_allocated_storage" {
+  description = "Hello World AWS DB Instance allocated storage"
+  type        = number
+  default     = 10
+}
+
+variable "hello_world_aws_db_instance_engine" {
+  description = "Hello World AWS DB Instance engine"
+  type        = string
+  default     = "postgres"
+}
+
+variable "hello_world_aws_db_instance_engine_version" {
+  description = "Hello World AWS DB Instance engine version"
+  type        = string
+  default     = "13.7"
+}
+
+variable "hello_world_aws_db_instance_port" {
+  description = "Hello World AWS DB Instance port"
+  type        = number
+  default     = 5432
+}
+
+variable "hello_world_aws_db_instance_skip_final_snapshot" {
+  description = "Hello World AWS DB Instance  skip final snapshot"
+  type        = bool
+  default     = true
+}
+
+variable "hello_world_aws_db_instance_storage_type" {
+  description = "Hello World AWS DB Instance storage type"
+  type        = string
+  default     = "gp2"
+}
+
+variable "hello_world_aws_db_instance_storage_encrypted" {
+  description = "Hello World AWS DB Instance storage encrypted"
+  type        = bool
+  default     = true
+}
+
+variable "hello_world_aws_db_instance_multi_az" {
+  description = "Hello World AWS DB Instance multi az"
+  type        = bool
+  default     = false
+}
+
+variable "hello_world_aws_db_instance_backup_retention_period" {
+  description = "Hello World AWS DB Instance backup retention period"
+  type        = number
+  default     = 7
+}
+
+variable "hello_world_aws_db_instance_username" {
+  description = "Hello World AWS DB Instance username"
+  type        = string
+  default     = "hwuser"
+}

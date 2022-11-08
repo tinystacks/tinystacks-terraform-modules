@@ -16,10 +16,13 @@ fi
 # check paramater to see which number to increment
 if [[ "$2" == "minor" ]]; then
   minor=$(echo $minor + 1 | bc)
+  patch="0"
 elif [[ "$2" == "patch" ]]; then
   patch=$(echo $patch + 1 | bc)
 elif [[ "$2" == "major" ]]; then
   major=$(echo $major + 1 | bc)
+  minor="0"
+  patch="0"
 else
   echo "usage: .github/workflows/incrementVersion.sh version_number [major/feature/bug]"
   exit -1

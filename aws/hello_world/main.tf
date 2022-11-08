@@ -50,7 +50,37 @@ module "hello_world_aws_instance_public_igw" {
 
 }
 
+/* RDS */
 
+module "hello_world_aws_db_security_group" {
+  source = "../modules/security_group"
+
+  ts_aws_security_group_vpc_id = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
+  ts_aws_security_group_rules  = var.hello_world_aws_db_vpc_security_group_rules
+
+}
+
+module "hello_world_aws_rds_postgres" {
+  source = "../modules/rds"
+
+  ts_aws_db_instance_identifier_name         = var.hello_world_aws_db_instance_identifier_name
+  ts_aws_db_instance_class                   = var.hello_world_aws_db_instance_class
+  ts_aws_db_instance_allocated_storage       = var.hello_world_aws_db_instance_allocated_storage
+  ts_aws_db_instance_engine                  = var.hello_world_aws_db_instance_engine
+  ts_aws_db_instance_engine_version          = var.hello_world_aws_db_instance_engine_version
+  ts_aws_db_instance_port                    = var.hello_world_aws_db_instance_port
+  ts_aws_db_instance_skip_final_snapshot     = var.hello_world_aws_db_instance_skip_final_snapshot
+  ts_aws_db_instance_storage_type            = var.hello_world_aws_db_instance_storage_type
+  ts_aws_db_instance_storage_encrypted       = var.hello_world_aws_db_instance_storage_encrypted
+  ts_aws_db_instance_multi_az                = var.hello_world_aws_db_instance_multi_az
+  ts_aws_db_instance_vpc_security_group_ids  = [module.hello_world_aws_db_security_group.ts_aws_security_group_id]
+  ts_aws_db_instance_subnet_ids              = values(module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map)
+  ts_aws_db_instance_backup_retention_period = var.hello_world_aws_db_instance_backup_retention_period
+  ts_aws_db_instance_username                = var.hello_world_aws_db_instance_username
+}
+
+
+/*
 module "hello_world_aws_instance_private_ngw" {
   source = "../modules/instance"
 
@@ -81,7 +111,10 @@ module "hello_world_aws_instance_private_isolated" {
 
 }
 
-/* FARGATE */
+*/
+
+/*
+ FARGATE 
 
 resource "aws_ecs_cluster" "acme_aws_ecs_cluster" {
   name = var.acme_aws_ecs_cluster_name
@@ -144,3 +177,5 @@ module "acme_api_aws_ecs_service" {
   ts_aws_ecs_service_load_balancer_container_port     = var.acme_api_aws_lb_target_group_port
 
 }
+
+*/

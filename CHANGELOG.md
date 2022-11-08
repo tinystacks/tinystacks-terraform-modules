@@ -1,3 +1,7 @@
+0.3.1
+---
+- AWS RDS module with support for both Postgres, MySQL and other engines.
+ 
 0.2.1
 ---
 Add contributing guide

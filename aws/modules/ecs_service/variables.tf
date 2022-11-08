@@ -24,6 +24,12 @@ variable "ts_aws_ecs_service_name" {
   default     = "acme-api"
 }
 
+variable "ts_aws_ecs_container_name" {
+  description = "TinyStacks AWS ECS Container Name"
+  type        = string
+  default     = "acme-api"
+}
+
 variable "ts_aws_ecs_service_launch_type" {
   description = "TinyStacks AWS ECS Service launch type"
   type        = string

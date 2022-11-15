@@ -97,3 +97,51 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.node_group_role.name
 }
+
+#helm
+
+resource "helm_release" "release" {
+  name       = var.helm_release_name
+  repository = var.helm_repository
+  chart      = var.helm_chart_name
+
+  values = var.helm_values_files
+
+  dynamic "set_sensitive" {
+    for_each = var.sensitive_values
+    content {
+      name  = set_sensitive.value["name"]
+      value = set_sensitive.value["value"]
+    }
+  }
+}
+
+#alb
+
+module "alb" {
+  source = "../alb"
+  alb_only = true
+  ts_aws_alb_name = "test"
+  ts_aws_alb_internal = false
+  ts_aws_alb_subnets = [for subnet in module.vpc.ts_aws_subnet_public_igw_map: subnet]
+  ts_aws_alb_security_groups = [module.vpc.vpc_security_group_id]
+  alb_tags = {
+    "ingress.k8s.aws/stack" = var.stack_name
+    "ingress.k8s.aws/resource" = "LoadBalancer"
+    "elbv2.k8s.aws/cluster" = aws_eks_cluster.cluster.name
+  }
+}
+
+module "alb_ingress_controller" {
+  source  = "../terraform-kubernetes-alb-ingress-controller"
+
+  providers = {
+    kubernetes = kubernetes.eks
+  }
+
+  k8s_cluster_type = "eks"
+  k8s_namespace    = "default"
+
+  aws_region_name  = var.region
+  k8s_cluster_name = aws_eks_cluster.cluster.name
+}

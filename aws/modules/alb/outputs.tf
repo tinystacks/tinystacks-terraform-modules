@@ -1,6 +1,6 @@
 output "ts_aws_lb_target_group_arn" {
   description = "TinyStacks AWS LB target group ARN"
-  value = aws_lb_target_group.ts_aws_lb_target_group.arn
+  value = var.alb_only ? null : aws_lb_target_group.ts_aws_lb_target_group[0].arn
 }
 
 output "ts_aws_alb_dns_name" {

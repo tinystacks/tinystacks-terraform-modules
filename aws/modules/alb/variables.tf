@@ -1,16 +1,19 @@
 variable "ts_aws_lb_target_group_vpc_id" {
   description = "TinyStacks AWS LB target group VPC id"
   type        = string
+  default = null
 }
 
 variable "ts_aws_alb_subnets" {
   description = "TinyStacks AWS ALB subnets"
   type        = list(string)
+  default = null
 }
 
 variable "ts_aws_alb_security_groups" {
   description = "TinyStacks AWS ALB security groups"
   type        = list(string)
+  default = null
 }
 
 variable "ts_aws_alb_name" {
@@ -77,4 +80,15 @@ variable "ts_aws_alb_listener_default_action_type" {
   description = "TinyStacks AWS ALB listener default action type"
   type        = string
   default     = "forward"
+}
+
+variable "alb_only" {
+  type = bool
+  description = "Creates only the alb."
+  default = false
+}
+
+variable "alb_tags" {
+  type = object({})
+  description = "A map of tags to assign to the resource."
 }

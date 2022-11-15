@@ -1,0 +1,3 @@
+output "ts_aws_elasticache_replication_group_configuration_endpoint_address" {
+  value = aws_elasticache_replication_group.ts_aws_elasticache_replication_group.configuration_endpoint_address
+}

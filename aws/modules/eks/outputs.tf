@@ -12,3 +12,6 @@ output "eks_node_iam_role" {
   }
 }
 
+output "test" {
+  value = module.alb_controller.test
+}

@@ -6,7 +6,7 @@ module "vpc" {
 resource "aws_eks_cluster" "cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
-
+  version = "1.20"
   vpc_config {
     subnet_ids = [for subnet in module.vpc.ts_aws_subnet_public_igw_map: subnet]
   }
@@ -132,16 +132,9 @@ module "alb" {
   }
 }
 
-module "alb_ingress_controller" {
-  source  = "../terraform-kubernetes-alb-ingress-controller"
-
-  providers = {
-    kubernetes = kubernetes.eks
-  }
-
-  k8s_cluster_type = "eks"
-  k8s_namespace    = "default"
-
-  aws_region_name  = var.region
-  k8s_cluster_name = aws_eks_cluster.cluster.name
+module "alb_controller" {
+  source = "../eks_alb_controller"
+  cluster_name = var.cluster_name
+  cluster_oidc_provider_url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+  region = var.region
 }

@@ -1,8 +1,3 @@
-variable "hello_world_aws_region" {
-  description = "Hello world AWS region"
-  type        = string
-}
-
 /* */
 
 variable "hello_world_aws_vpc_cidr_block" {
@@ -73,6 +68,14 @@ variable "hello_world_vpc_security_group_rules" {
   default = [
     {
       rule_type   = "ingress"
+      description = "SSH"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      rule_type   = "ingress"
       description = "Ping"
       from_port   = 0
       to_port     = 0
@@ -113,97 +116,60 @@ variable "hello_world_aws_instance_type" {
 variable "hello_world_aws_instance_key_name" {
   description = "Hello World AWS Instance Key Name"
   type        = string
+  default     = "ts_aj_terraform"
 }
 
 /* Redis */
 
-variable "hello_world_elasticache_redis_security_group_rules" {
-  description = "Hello World ElastiCache Security Group rules"
-
-  type = list(object({
-    rule_type   = string
-    description = string
-    from_port   = number
-    to_port     = number
-    protocol    = string
-    cidr_blocks = list(string)
-  }))
-
-  default = [
-    {
-      rule_type   = "ingress"
-      description = "Redis"
-      from_port   = 6379
-      to_port     = 6379
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-    {
-      rule_type   = "egress"
-      description = "Outbound"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  ]
-}
-
-variable "hello_world_aws_elasticache_replication_group_id" {
+variable "hw_id" {
   description = "AWS ElastiCache Redis Replication group id"
   type        = string
   default     = "hello-world-redis-cluster"
 }
 
-variable "hello_world_aws_elasticache_replication_group_description" {
+variable "hw_description" {
   description = "AWS ElastiCache Redis Replication group description"
   type        = string
   default     = "Redis Cluster"
 }
 
-variable "hello_world_aws_elasticache_replication_group_node_type" {
+variable "hw_node_type" {
   description = "AWS ElastiCache Redis Replication group node type"
   type        = string
   default     = "cache.m4.large"
 }
 
-variable "hello_world_aws_elasticache_replication_group_port" {
+variable "hw_port" {
   description = "AWS ElastiCache Redis Replication group port"
   type        = number
   default     = 6379
 }
 
-variable "hello_world_aws_elasticache_replication_group_parameter_group_name" {
+variable "hw_parameter_group_name" {
   description = "AWS ElastiCache Redis Replication group parameter group name"
   type        = string
   default     = "default.redis7.cluster.on"
 }
 
-variable "hello_world_aws_elasticache_replication_group_snapshot_retention_limit" {
+variable "hw_snapshot_retention_limit" {
   description = "AWS ElastiCache Redis Replication group snapshot retention limit"
   type        = number
   default     = 5
 }
 
-variable "hello_world_aws_elasticache_replication_group_snapshot_window" {
+variable "hw_snapshot_window" {
   description = "AWS ElastiCache Redis Replication group snapshot window"
   type        = string
   default     = "00:00-05:00"
 }
 
-variable "hello_world_aws_elasticache_replication_group_automatic_failover_enabled" {
-  description = "AWS ElastiCache Redis Replication group automatic failover enabled"
-  type        = bool
-  default     = true
-}
-
-variable "hello_world_aws_elasticache_replication_group_replicas_per_node_group" {
+variable "hw_replicas_per_node_group" {
   description = "AWS ElastiCache Redis Replication group replicas per node group"
   type        = number
   default     = 1
 }
 
-variable "hello_world_aws_elasticache_replication_group_num_node_groups" {
+variable "hw_num_node_groups" {
   description = "AWS ElastiCache Redis Replication group num node groups"
   type        = number
   default     = 3

@@ -9,10 +9,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  region  = var.hello_world_aws_region
-}
-
 module "ts_aws_vpc_hello_world" {
   source = "../modules/vpc"
 
@@ -52,29 +48,21 @@ module "hello_world_aws_instance_public_igw" {
 
 /* ElastiCache Redis Example */
 
-module "hello_world_elasticache_redis_security_group" {
-  source = "../modules/security_group"
-
-  ts_aws_security_group_vpc_id = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
-  ts_aws_security_group_rules  = var.hello_world_elasticache_redis_security_group_rules
-
-}
-
-module "hello_world_elasticache_redis_cluster" {
+module "hw_redis_cluster" {
   source = "../modules/elasticache_redis"
 
-  ts_aws_elasticache_subnet_group_subnet_ids                      = values(module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map)
-  ts_aws_elasticache_replication_group_security_group_ids         = [module.hello_world_elasticache_redis_security_group.ts_aws_security_group_id]
-  ts_aws_elasticache_replication_group_id                         = var.hello_world_aws_elasticache_replication_group_id
-  ts_aws_elasticache_replication_group_description                = var.hello_world_aws_elasticache_replication_group_description
-  ts_aws_elasticache_replication_group_node_type                  = var.hello_world_aws_elasticache_replication_group_node_type
-  ts_aws_elasticache_replication_group_port                       = var.hello_world_aws_elasticache_replication_group_port
-  ts_aws_elasticache_replication_group_parameter_group_name       = var.hello_world_aws_elasticache_replication_group_parameter_group_name
-  ts_aws_elasticache_replication_group_snapshot_retention_limit   = var.hello_world_aws_elasticache_replication_group_snapshot_retention_limit
-  ts_aws_elasticache_replication_group_snapshot_window            = var.hello_world_aws_elasticache_replication_group_snapshot_window
-  ts_aws_elasticache_replication_group_automatic_failover_enabled = var.hello_world_aws_elasticache_replication_group_automatic_failover_enabled
-  ts_aws_elasticache_replication_group_replicas_per_node_group    = var.hello_world_aws_elasticache_replication_group_replicas_per_node_group
-  ts_aws_elasticache_replication_group_num_node_groups            = var.hello_world_aws_elasticache_replication_group_num_node_groups
+  ec_vpc_id                     = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
+  ec_vpc_cidr                   = var.hello_world_aws_vpc_cidr_block
+  ec_subnet_ids                 = values(module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map)
+  ec_id                         = var.hw_id
+  ec_description                = var.hw_description
+  ec_node_type                  = var.hw_node_type
+  ec_port                       = var.hw_port
+  ec_parameter_group_name       = var.hw_parameter_group_name
+  ec_snapshot_retention_limit   = var.hw_snapshot_retention_limit
+  ec_snapshot_window            = var.hw_snapshot_window
+  ec_replicas_per_node_group    = var.hw_replicas_per_node_group
+  ec_num_node_groups            = var.hw_num_node_groups
 
 }
 

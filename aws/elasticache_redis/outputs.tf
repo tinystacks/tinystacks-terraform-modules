@@ -26,7 +26,7 @@ output "hello_world_aws_instance_public_igw_public_ip_map" {
   }
 }
 
-output "hello_world_elasticache_redis_cluster_endpoint_address" {
+output "hw_redis_cluster_endpoint_address" {
   description = "Hello World ElastiCache Redis cluster endpoint address"
-  value = module.hello_world_elasticache_redis_cluster.ts_aws_elasticache_replication_group_configuration_endpoint_address
+  value = module.hw_redis_cluster.ec_configuration_endpoint_address
 }

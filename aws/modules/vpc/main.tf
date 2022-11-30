@@ -1,3 +1,7 @@
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 resource "aws_vpc" "ts_aws_vpc" {
 
   cidr_block           = var.ts_aws_vpc_cidr_block
@@ -6,11 +10,34 @@ resource "aws_vpc" "ts_aws_vpc" {
 
 }
 
+locals {
+
+    available_azs = var.ts_vpc_slice_azs ? slice(data.aws_availability_zones.available.names, var.ts_vpc_slice_azs_start_index, var.ts_vpc_slice_azs_end_index) : data.aws_availability_zones.available.names
+
+    az_len = length(local.available_azs)
+
+    ts_public_igw_cidr_blocks = {
+        for i in range(0, local.az_len) :
+            data.aws_availability_zones.available.names[i] => (local.az_len * 0) + 1 + i
+    }
+
+    ts_private_ngw_cidr_blocks = {
+        for i in range(0, local.az_len) :
+            data.aws_availability_zones.available.names[i] => (local.az_len * 1) + 1 + i
+    }
+
+    ts_private_isolated_cidr_blocks = {
+        for i in range(0, local.az_len) :
+            data.aws_availability_zones.available.names[i] => (local.az_len * 2) + 1 + i
+    }
+
+}
+
 /* */
 
 resource "aws_subnet" "ts_aws_subnet_public_igw" {
 
-  for_each = var.ts_public_igw_cidr_blocks
+  for_each = local.ts_public_igw_cidr_blocks
 
   vpc_id            = aws_vpc.ts_aws_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ts_aws_vpc.cidr_block, var.ts_aws_vpc_cidr_newbits, each.value)
@@ -49,7 +76,7 @@ resource "aws_route" "ts_aws_route_public_igw" {
 
 resource "aws_subnet" "ts_aws_subnet_private_ngw" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   vpc_id            = aws_vpc.ts_aws_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ts_aws_vpc.cidr_block, var.ts_aws_vpc_cidr_newbits, each.value)
@@ -58,14 +85,14 @@ resource "aws_subnet" "ts_aws_subnet_private_ngw" {
 
 resource "aws_route_table" "ts_aws_route_table_private_ngw" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   vpc_id = aws_vpc.ts_aws_vpc.id
 }
 
 resource "aws_route_table_association" "ts_aws_route_table_association_private_ngw" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   subnet_id      = aws_subnet.ts_aws_subnet_private_ngw[each.key].id
   route_table_id = aws_route_table.ts_aws_route_table_private_ngw[each.key].id
@@ -73,14 +100,14 @@ resource "aws_route_table_association" "ts_aws_route_table_association_private_n
 
 resource "aws_eip" "ts_aws_eip_nat" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   vpc = true
 }
 
 resource "aws_nat_gateway" "ts_aws_nat_gateway" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   subnet_id     = aws_subnet.ts_aws_subnet_public_igw[each.key].id
   allocation_id = aws_eip.ts_aws_eip_nat[each.key].id
@@ -90,7 +117,7 @@ resource "aws_nat_gateway" "ts_aws_nat_gateway" {
 
 resource "aws_route" "ts_aws_route_private_ngw" {
 
-  for_each = var.ts_private_ngw_cidr_blocks
+  for_each = local.ts_private_ngw_cidr_blocks
 
   route_table_id         = aws_route_table.ts_aws_route_table_private_ngw[each.key].id
   destination_cidr_block = "0.0.0.0/0"
@@ -101,7 +128,7 @@ resource "aws_route" "ts_aws_route_private_ngw" {
 
 resource "aws_subnet" "ts_aws_subnet_private_isolated" {
 
-  for_each = var.ts_private_isolated_cidr_blocks
+  for_each = local.ts_private_isolated_cidr_blocks
 
   vpc_id            = aws_vpc.ts_aws_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ts_aws_vpc.cidr_block, var.ts_aws_vpc_cidr_newbits, each.value)

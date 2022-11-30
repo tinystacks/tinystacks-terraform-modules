@@ -26,29 +26,6 @@ output "hello_world_aws_instance_public_igw_public_ip_map" {
   }
 }
 
-output "hello_world_aws_rds_postgres_endpoint" {
-  description = "Hello World AWS RDS Postgres Endpoint"
-  value = module.hello_world_aws_rds_postgres.ts_aws_db_instance_endpoint
-}
-
-output "hello_world_aws_rds_postgres_username" {
-  description = "Hello World AWS RDS Postgres username"
-  value = module.hello_world_aws_rds_postgres.ts_aws_db_instance_username
-}
-
-output "hello_world_aws_rds_postgres_password" {
-  description = "Hello World AWS RDS Postgres password"
-  value = module.hello_world_aws_rds_postgres.ts_aws_db_instance_password
-  sensitive = true
-}
-
-output "hello_world_aws_rds_postgres_db_name" {
-  description = "Hello World AWS RDS Postgres DB name"
-  value = module.hello_world_aws_rds_postgres.ts_aws_db_instance_db_name
-}
-
-/*
-
 output "hello_world_aws_instance_private_ngw_private_ip_map" {
   description = "Hello World AWS Instance private NGW private IP"
   value = {
@@ -64,10 +41,3 @@ output "hello_world_aws_instance_private_isolated_private_ip_map" {
     each_instance.ts_aws_instance_id => each_instance.ts_aws_instance_private_ip
   }
 }
-
-output "acme_api_aws_alb_url" {
-  description = "TinyStacks AWS ALB URL"
-  value = "http://${module.acme_api_aws_alb.ts_aws_alb_dns_name}"
-}
-
-*/

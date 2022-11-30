@@ -1,5 +1,5 @@
 locals {
-  oidc_url      = split("/", var.cluster_oidc_provider_url)
+  oidc_url = split("/", var.cluster_oidc_provider_url)
   values_merged = concat(var.values, [
     {
       name : "clusterName",
@@ -7,10 +7,11 @@ locals {
     },
     {
       name : "serviceAccount.name",
-      value : kubernetes_service_account_v1.lb_controller_sa.id
+      value : local.load_balancer_name
     }
-  ]
+    ]
   )
+  load_balancer_name = "aws-load-balancer-controller"
 }
 
 data "aws_caller_identity" "current" {}
@@ -21,7 +22,7 @@ resource "aws_iam_policy" "lb_controller_iam_policy" {
   description = "AWS EKS LB Controller IAM Policy"
 
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
         "Effect" : "Allow",
@@ -245,7 +246,7 @@ resource "aws_iam_role" "lb_controller_role" {
   name = "${var.cluster_name}-LBControllerRole"
 
   assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
         "Effect" : "Allow",
@@ -256,7 +257,7 @@ resource "aws_iam_role" "lb_controller_role" {
         "Condition" : {
           "StringEquals" : {
             "oidc.eks.${var.region}.amazonaws.com/id/${local.oidc_url[4]}:aud" : "sts.amazonaws.com",
-            "oidc.eks.${var.region}.amazonaws.com/id/${local.oidc_url[4]}:sub" : "system:serviceaccount:kube-system:aws-load-balancer-controller"
+            "oidc.eks.${var.region}.amazonaws.com/id/${local.oidc_url[4]}:sub" : "system:serviceaccount:kube-system:${local.load_balancer_name}"
           }
         }
       }
@@ -273,10 +274,10 @@ resource "kubernetes_service_account_v1" "lb_controller_sa" {
   metadata {
     labels = {
       "app.kubernetes.io/component" : "controller",
-      "app.kubernetes.io/name" : "aws-load-balancer-controller"
+      "app.kubernetes.io/name" : local.load_balancer_name
     }
-    name        = "aws-load-balancer-controller"
-    namespace   = "kube-system"
+    name      = local.load_balancer_name
+    namespace = "kube-system"
     annotations = {
       "eks.amazonaws.com/role-arn" : aws_iam_role.lb_controller_role.arn
     }
@@ -284,11 +285,11 @@ resource "kubernetes_service_account_v1" "lb_controller_sa" {
 }
 
 resource "helm_release" "release" {
-  name       = "eks-lb-controller"
+  name       = "lb-c"
   repository = "https://aws.github.io/eks-charts"
-  chart      = "eks/aws-load-balancer-controller"
+  chart      = "aws-load-balancer-controller"
   version    = "1.4.6"
-
+  namespace  = "kube-system"
   dynamic "set" {
     for_each = local.values_merged
     content {
@@ -296,8 +297,4 @@ resource "helm_release" "release" {
       value = set.value["value"]
     }
   }
-}
-
-output "test" {
-  value = kubernetes_service_account_v1.lb_controller_sa.id
 }

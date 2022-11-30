@@ -65,16 +65,16 @@ variable "sensitive_values" {
     value = string
   }))
   description = "Values to be merged with the values yaml that won't be exposed in the plan's diff."
-  default = []
+  default     = []
 }
 
 variable "region" {
-  type  = string
+  type    = string
   default = "us-east-1"
 }
 
 variable "stack_name" {
-  type = string
+  type        = string
   description = "The value specified in the alb.ingress.kubernetes.io/group.name annotation"
-  default = "stack"
+  default     = "stack"
 }

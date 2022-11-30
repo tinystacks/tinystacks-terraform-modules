@@ -13,9 +13,9 @@ variable "ts_aws_vpc_cidr_newbits" {
 /* */
 
 variable "ts_public_igw_cidr_blocks" {
-  type = map(number)
+  type        = map(number)
   description = "TinyStacks Availability Zone CIDR Mapping for Public IGW subnets"
- 
+
   default = {
     "us-east-1b" = 1
     "us-east-1d" = 2
@@ -24,9 +24,9 @@ variable "ts_public_igw_cidr_blocks" {
 }
 
 variable "ts_private_ngw_cidr_blocks" {
-  type = map(number)
+  type        = map(number)
   description = "TinyStacks Availability Zone CIDR Mapping for Private NGW subnets"
- 
+
   default = {
     "us-east-1b" = 4
     "us-east-1d" = 5
@@ -35,9 +35,9 @@ variable "ts_private_ngw_cidr_blocks" {
 }
 
 variable "ts_private_isolated_cidr_blocks" {
-  type = map(number)
+  type        = map(number)
   description = "TinyStacks Availability Zone CIDR Mapping for Private isolated subnets"
- 
+
   default = {
     "us-east-1b" = 7
     "us-east-1d" = 8

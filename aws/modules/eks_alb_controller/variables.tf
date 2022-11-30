@@ -6,8 +6,6 @@ variable "cluster_endpoint" {
   type = string
 }
 
-
-
 variable "cluster_oidc_provider_url" {
   type = string
 }
@@ -24,8 +22,12 @@ variable "values" {
   description = "Values to be merged with the values yaml"
   default = [
     {
-      name: "serviceAccount.create",
-      value: "false"
+      name : "serviceAccount.create",
+      value : "false"
     }
   ]
+}
+
+variable "cluster_certificate" {
+  type = string
 }

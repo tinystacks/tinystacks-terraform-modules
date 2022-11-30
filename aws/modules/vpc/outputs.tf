@@ -29,5 +29,5 @@ output "ts_aws_subnet_private_isolated_map" {
 
 output "vpc_security_group_id" {
   description = "The default security group ID for the VPC."
-  value = aws_vpc.ts_aws_vpc.default_security_group_id
+  value       = aws_vpc.ts_aws_vpc.default_security_group_id
 }

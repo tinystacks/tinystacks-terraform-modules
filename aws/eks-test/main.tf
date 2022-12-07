@@ -23,6 +23,10 @@ module "eks" {
     {
       name  = "appName",
       value = "test"
+    },
+    {
+      name = "deploymentReplicas"
+      value = 3
     }
   ]
   AWS_REGION         = "us-east-1"

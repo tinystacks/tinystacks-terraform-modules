@@ -50,7 +50,7 @@ variable "helm_values_files" {
 }
 
 variable "helm_path" {
-  type = string
+  type        = string
   description = "Path to helm chart."
 }
 
@@ -65,13 +65,13 @@ variable "values" {
 
 variable "env_variables" {
   type = object({
-  env = object({})
+    env = object({})
   })
   description = "Environment variables for the containers."
 }
 
 variable "AWS_REGION" {
-  type    = string
+  type = string
 }
 
 variable "stack_name" {

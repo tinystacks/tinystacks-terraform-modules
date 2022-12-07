@@ -29,5 +29,5 @@ module "eks" {
   max_node_count     = 6
   desired_node_count = 4
   min_node_count     = 4
-  env_variables = {"env": {"test1": "test", "test2": "test"}}
+  env_variables      = { "env" : { "test1" : "test", "test2" : "test" } }
 }

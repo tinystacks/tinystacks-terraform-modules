@@ -63,9 +63,8 @@ variable "values" {
   default     = []
 }
 
-variable "region" {
+variable "AWS_REGION" {
   type    = string
-  default = "us-east-1"
 }
 
 variable "stack_name" {

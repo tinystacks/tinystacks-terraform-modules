@@ -143,7 +143,7 @@ module "alb_controller" {
   source                    = "../eks_alb_controller"
   cluster_name              = var.cluster_name
   cluster_oidc_provider_url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-  region                    = var.region
+  region                    = var.AWS_REGION
   cluster_endpoint          = aws_eks_cluster.cluster.endpoint
   cluster_certificate       = aws_eks_cluster.cluster.certificate_authority[0].data
 }

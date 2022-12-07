@@ -1,3 +1,7 @@
+0.3.4
+---
+Remove hardcoded Regions and AZs to automate them
+ 
 0.3.3
 ---
 Added standards doc

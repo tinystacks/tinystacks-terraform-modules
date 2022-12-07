@@ -19,5 +19,3 @@ provider "helm" {
     }
   }
 }
-
-//TODO: set up k8 provider and continue ALB module

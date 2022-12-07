@@ -16,9 +16,14 @@ spec:
     spec:
       containers:
       - name: {{ .Values.appName }}
-        image: "{{ .Values.image.repoUri }}:{{ .Values.image.imageTag }}"
+        image: "{{ .Values.repoUri }}:{{ .Values.imageTag }}"
         ports:
         - containerPort: {{ .Values.containerPort }}
+        env:
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key }}
+          value: {{ $value }}
+        {{- end }}
 ---
 apiVersion: v1
 kind: Service

@@ -109,7 +109,12 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
 resource "helm_release" "release" {
   name   = var.helm_release_name
   chart  = var.helm_path
-  values = var.helm_values_files
+  values = [yamlencode(var.env_variables)]
+  force_update = true
+  reset_values = true
+  recreate_pods = true
+  cleanup_on_fail = true
+  lint = true
 
   dynamic "set" {
     for_each = var.values

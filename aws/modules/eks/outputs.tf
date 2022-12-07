@@ -11,7 +11,3 @@ output "eks_node_iam_role" {
     arn  = aws_iam_role.node_group_role.arn
   }
 }
-
-#output "test" {
-#  value = module.alb_controller.test
-#}

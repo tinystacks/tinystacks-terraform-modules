@@ -63,6 +63,13 @@ variable "values" {
   default     = []
 }
 
+variable "env_variables" {
+  type = object({
+  env = object({})
+  })
+  description = "Environment variables for the containers."
+}
+
 variable "AWS_REGION" {
   type    = string
 }

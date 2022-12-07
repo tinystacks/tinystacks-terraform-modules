@@ -43,28 +43,23 @@ variable "helm_release_name" {
   description = "The name of the helm release."
 }
 
-variable "helm_repository" {
-  type        = string
-  description = "The URI of the helm repository."
-}
-
-variable "helm_chart_name" {
-  type        = string
-  description = "The name of the helm chart."
-}
-
 variable "helm_values_files" {
   type        = list(string)
   description = "A list of locations of the helm values files."
   default     = []
 }
 
-variable "sensitive_values" {
+variable "helm_path" {
+  type = string
+  description = "Path to helm chart."
+}
+
+variable "values" {
   type = list(object({
     name  = string
     value = string
   }))
-  description = "Values to be merged with the values yaml that won't be exposed in the plan's diff."
+  description = "Values to be merged with the values yaml."
   default     = []
 }
 

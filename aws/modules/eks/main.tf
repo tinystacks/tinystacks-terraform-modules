@@ -107,20 +107,19 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
 #helm
 
 resource "helm_release" "release" {
-  name       = var.helm_release_name
-  repository = var.helm_repository
-  chart      = var.helm_chart_name
-
+  name   = var.helm_release_name
+  chart  = var.helm_path
   values = var.helm_values_files
 
-  dynamic "set_sensitive" {
-    for_each = var.sensitive_values
+  dynamic "set" {
+    for_each = var.values
     content {
-      name  = set_sensitive.value["name"]
-      value = set_sensitive.value["value"]
+      name  = set.value["name"]
+      value = set.value["value"]
     }
   }
 }
+
 
 #alb
 

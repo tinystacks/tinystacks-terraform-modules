@@ -82,4 +82,5 @@ variable "hello_world_aws_instance_type" {
 variable "hello_world_aws_instance_key_name" {
   description = "Hello World AWS Instance Key Name"
   type        = string
+  default     = "tinystacks_terraform_aj"
 }

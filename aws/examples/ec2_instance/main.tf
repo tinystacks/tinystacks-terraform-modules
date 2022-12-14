@@ -10,7 +10,7 @@ terraform {
 }
 
 module "ts_aws_vpc_hello_world" {
-  source = "../modules/vpc"
+  source = "../../modules/vpc"
 
   ts_aws_vpc_cidr_block   = var.hello_world_aws_vpc_cidr_block
   ts_aws_vpc_cidr_newbits = var.hello_world_aws_vpc_cidr_newbits
@@ -24,7 +24,7 @@ module "ts_aws_vpc_hello_world" {
 /* EC2 Example */
 
 module "hello_world_aws_security_group" {
-  source = "../modules/security_group"
+  source = "../../modules/security_group"
 
   ts_aws_security_group_vpc_id = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
   ts_aws_security_group_rules  = var.hello_world_vpc_security_group_rules
@@ -32,7 +32,7 @@ module "hello_world_aws_security_group" {
 }
 
 module "hello_world_aws_instance_public_igw" {
-  source = "../modules/instance"
+  source = "../../modules/instance"
 
   for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_public_igw_map
 
@@ -47,7 +47,7 @@ module "hello_world_aws_instance_public_igw" {
 }
 
 module "hello_world_aws_instance_private_ngw" {
-  source = "../modules/instance"
+  source = "../../modules/instance"
 
   for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map
 
@@ -62,7 +62,7 @@ module "hello_world_aws_instance_private_ngw" {
 }
 
 module "hello_world_aws_instance_private_isolated" {
-  source = "../modules/instance"
+  source = "../../modules/instance"
 
   for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_isolated_map
 

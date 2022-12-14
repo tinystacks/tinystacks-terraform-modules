@@ -1,3 +1,7 @@
+0.6.0
+---
+EKS Module and EKS + RDS Stitcher
+ 
 0.5.0
 ---
 * ECS + RDS Stitcher

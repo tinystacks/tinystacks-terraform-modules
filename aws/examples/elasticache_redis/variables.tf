@@ -12,43 +12,19 @@ variable "hello_world_aws_vpc_cidr_newbits" {
   default     = 4
 }
 
-/* */
-
-variable "hello_world_public_igw_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Public IGW subnets"
- 
-  default = {
-    "us-east-1b" = 1
-    "us-east-1d" = 2
-    "us-east-1f" = 3
-  }
+variable "hello_world_slice_azs" {
+    type = bool
+    default = true
 }
 
-/* */
-
-variable "hello_world_private_ngw_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Private NGW subnets"
- 
-  default = {
-    "us-east-1b" = 4
-    "us-east-1d" = 5
-    "us-east-1f" = 6
-  }
+variable "hello_world_slice_start_index" {
+    type = number
+    default = 0
 }
 
-/* */
-
-variable "hello_world_private_isolated_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Private isolated subnets"
- 
-  default = {
-    "us-east-1b" = 7
-    "us-east-1d" = 8
-    "us-east-1f" = 9
-  }
+variable "hello_world_slice_end_index" {
+    type = number
+    default = 3
 }
 
 /* */

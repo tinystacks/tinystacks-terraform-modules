@@ -10,21 +10,21 @@ terraform {
 }
 
 module "ts_aws_vpc_hello_world" {
-  source = "../modules/vpc"
+  source = "../../modules/vpc"
 
   ts_aws_vpc_cidr_block   = var.hello_world_aws_vpc_cidr_block
   ts_aws_vpc_cidr_newbits = var.hello_world_aws_vpc_cidr_newbits
 
-  ts_public_igw_cidr_blocks       = var.hello_world_public_igw_cidr_blocks
-  ts_private_ngw_cidr_blocks      = var.hello_world_private_ngw_cidr_blocks
-  ts_private_isolated_cidr_blocks = var.hello_world_private_isolated_cidr_blocks
+  ts_vpc_slice_azs             = var.hello_world_slice_azs
+  ts_vpc_slice_azs_start_index = var.hello_world_slice_start_index
+  ts_vpc_slice_azs_end_index   = var.hello_world_slice_end_index
 
 }
 
 /* EC2 Example */
 
 module "hello_world_aws_security_group" {
-  source = "../modules/security_group"
+  source = "../../modules/security_group"
 
   ts_aws_security_group_vpc_id = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
   ts_aws_security_group_rules  = var.hello_world_vpc_security_group_rules
@@ -32,9 +32,9 @@ module "hello_world_aws_security_group" {
 }
 
 module "hello_world_aws_instance_public_igw" {
-  source = "../modules/instance"
+  source = "../../modules/instance"
 
-  for_each = var.hello_world_public_igw_cidr_blocks
+  for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_public_igw_map
 
   ts_vpc_security_group_ids = [module.hello_world_aws_security_group.ts_aws_security_group_id]
   ts_aws_subnet_id          = module.ts_aws_vpc_hello_world.ts_aws_subnet_public_igw_map[each.key]
@@ -49,7 +49,7 @@ module "hello_world_aws_instance_public_igw" {
 /* ElastiCache Redis Example */
 
 module "hw_redis_cluster" {
-  source = "../modules/elasticache_redis"
+  source = "../../modules/elasticache_redis"
 
   ec_vpc_id                     = module.ts_aws_vpc_hello_world.ts_aws_vpc_id
   ec_vpc_cidr                   = var.hello_world_aws_vpc_cidr_block

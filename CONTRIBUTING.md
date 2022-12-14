@@ -38,6 +38,11 @@ Scan through our [existing issues](https://github.com/tinystacks/tinystacks-terr
 ### Commit your update
 
 Commit the changes once you are happy with them. Don't forget to [self-review](/contributing/self-review.md) to speed up the review process:zap:.
+#### pre-commit checklist
+- [ ] lint (aspirational)
+- [ ] add releasenotes
+- [ ] create a stitcher from the changed modules. Deploy that stitcher twice with 2 different `STACK_NAME`s
+- [ ] update .version-change-type
 
 ### Pull Request
 

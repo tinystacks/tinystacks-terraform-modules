@@ -1,3 +1,8 @@
+0.5.0
+---
+* ECS + RDS Stitcher
+* Repo refactor to match CDK examples
+ 
 0.4.0
 ---
 AWS ElastiCache Redis module

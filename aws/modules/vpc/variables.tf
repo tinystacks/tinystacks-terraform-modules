@@ -10,37 +10,17 @@ variable "ts_aws_vpc_cidr_newbits" {
   default     = 4
 }
 
-/* */
-
-variable "ts_public_igw_cidr_blocks" {
-  type = map(number)
-  description = "TinyStacks Availability Zone CIDR Mapping for Public IGW subnets"
- 
-  default = {
-    "us-east-1b" = 1
-    "us-east-1d" = 2
-    "us-east-1f" = 3
-  }
+variable "ts_vpc_slice_azs" {
+    type = bool
+    default = true
 }
 
-variable "ts_private_ngw_cidr_blocks" {
-  type = map(number)
-  description = "TinyStacks Availability Zone CIDR Mapping for Private NGW subnets"
- 
-  default = {
-    "us-east-1b" = 4
-    "us-east-1d" = 5
-    "us-east-1f" = 6
-  }
+variable "ts_vpc_slice_azs_start_index" {
+    type = number
+    default = 0
 }
 
-variable "ts_private_isolated_cidr_blocks" {
-  type = map(number)
-  description = "TinyStacks Availability Zone CIDR Mapping for Private isolated subnets"
- 
-  default = {
-    "us-east-1b" = 7
-    "us-east-1d" = 8
-    "us-east-1f" = 9
-  }
+variable "ts_vpc_slice_azs_end_index" {
+    type = number
+    default = 3
 }

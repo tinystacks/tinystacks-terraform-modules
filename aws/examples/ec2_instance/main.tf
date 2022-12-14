@@ -9,19 +9,15 @@ terraform {
   }
 }
 
-provider "aws" {
-  region  = var.hello_world_aws_region
-}
-
 module "ts_aws_vpc_hello_world" {
   source = "../../modules/vpc"
 
   ts_aws_vpc_cidr_block   = var.hello_world_aws_vpc_cidr_block
   ts_aws_vpc_cidr_newbits = var.hello_world_aws_vpc_cidr_newbits
 
-  ts_public_igw_cidr_blocks       = var.hello_world_public_igw_cidr_blocks
-  ts_private_ngw_cidr_blocks      = var.hello_world_private_ngw_cidr_blocks
-  ts_private_isolated_cidr_blocks = var.hello_world_private_isolated_cidr_blocks
+  ts_vpc_slice_azs             = var.hello_world_slice_azs
+  ts_vpc_slice_azs_start_index = var.hello_world_slice_start_index
+  ts_vpc_slice_azs_end_index   = var.hello_world_slice_end_index
 
 }
 
@@ -38,7 +34,7 @@ module "hello_world_aws_security_group" {
 module "hello_world_aws_instance_public_igw" {
   source = "../../modules/instance"
 
-  for_each = var.hello_world_public_igw_cidr_blocks
+  for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_public_igw_map
 
   ts_vpc_security_group_ids = [module.hello_world_aws_security_group.ts_aws_security_group_id]
   ts_aws_subnet_id          = module.ts_aws_vpc_hello_world.ts_aws_subnet_public_igw_map[each.key]
@@ -53,7 +49,7 @@ module "hello_world_aws_instance_public_igw" {
 module "hello_world_aws_instance_private_ngw" {
   source = "../../modules/instance"
 
-  for_each = var.hello_world_private_ngw_cidr_blocks
+  for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map
 
   ts_vpc_security_group_ids = [module.hello_world_aws_security_group.ts_aws_security_group_id]
   ts_aws_subnet_id          = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_ngw_map[each.key]
@@ -68,7 +64,7 @@ module "hello_world_aws_instance_private_ngw" {
 module "hello_world_aws_instance_private_isolated" {
   source = "../../modules/instance"
 
-  for_each = var.hello_world_private_isolated_cidr_blocks
+  for_each = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_isolated_map
 
   ts_vpc_security_group_ids = [module.hello_world_aws_security_group.ts_aws_security_group_id]
   ts_aws_subnet_id          = module.ts_aws_vpc_hello_world.ts_aws_subnet_private_isolated_map[each.key]

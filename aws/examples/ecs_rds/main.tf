@@ -9,9 +9,7 @@ terraform {
   }
 }
 
-provider "aws" {
-  region  = var.hello_world_aws_region
-}
+data "aws_region" "current" {}
 
 module "ts_aws_vpc_hello_world" {
   source = "../../modules/vpc"
@@ -19,9 +17,9 @@ module "ts_aws_vpc_hello_world" {
   ts_aws_vpc_cidr_block   = var.hello_world_aws_vpc_cidr_block
   ts_aws_vpc_cidr_newbits = var.hello_world_aws_vpc_cidr_newbits
 
-  ts_public_igw_cidr_blocks       = var.hello_world_public_igw_cidr_blocks
-  ts_private_ngw_cidr_blocks      = var.hello_world_private_ngw_cidr_blocks
-  ts_private_isolated_cidr_blocks = var.hello_world_private_isolated_cidr_blocks
+  ts_vpc_slice_azs             = var.hello_world_slice_azs
+  ts_vpc_slice_azs_start_index = var.hello_world_slice_start_index
+  ts_vpc_slice_azs_end_index   = var.hello_world_slice_end_index
 
 }
 
@@ -126,7 +124,7 @@ module "acme_api_aws_ecs_service" {
                     logConfiguration = {
                       logDriver = "awslogs"
                       options = {
-                        awslogs-region = var.hello_world_aws_region
+                        awslogs-region = data.aws_region.current.name
                         awslogs-group  = "/ecs/${var.acme_api_aws_ecs_service_name}"
                         awslogs-stream-prefix = "ecs"
                       }

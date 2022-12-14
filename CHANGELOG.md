@@ -1,3 +1,7 @@
+0.4.0
+---
+AWS ElastiCache Redis module
+ 
 0.3.4
 ---
 Remove hardcoded Regions and AZs to automate them

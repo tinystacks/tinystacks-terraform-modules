@@ -3,11 +3,12 @@ module "vpc" {
 }
 
 
+
 module "eks" {
-  source       = "../modules/eks"
-  cluster_name = "test123"
-  helm_release_name  = "test"
-  helm_path    = "../modules/eks/helm/testchart"
+  source            = "../modules/eks"
+  cluster_name      = "test123"
+  helm_release_name = "test"
+  helm_path         = "../modules/eks/helm/testchart"
   values = [{
     name  = "repoUri",
     value = "nginx"
@@ -29,7 +30,7 @@ module "eks" {
       value = "test"
     },
     {
-      name = "deploymentReplicas"
+      name  = "deploymentReplicas"
       value = 3
     }
   ]
@@ -38,5 +39,5 @@ module "eks" {
   desired_node_count = 4
   min_node_count     = 4
   env_variables      = { "env" : { "DB_HOST" : "postgresql://example:example@postgres.com:1234", "test2" : "test" } }
-  subnets = module.vpc.ts_aws_subnet_public_igw_map
+  subnets            = [for subnet in module.vpc.ts_aws_subnet_public_igw_map : subnet]
 }

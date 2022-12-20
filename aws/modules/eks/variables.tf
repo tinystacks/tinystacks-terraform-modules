@@ -81,6 +81,6 @@ variable "stack_name" {
 }
 
 variable "subnets" {
-  type = any
+  type        = list(string)
   description = "List of subnets to use for the EKS cluster."
 }

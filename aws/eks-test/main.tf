@@ -1,3 +1,7 @@
+module "vpc" {
+  source = "../modules/vpc"
+}
+
 
 module "eks" {
   source       = "../modules/eks"
@@ -34,4 +38,5 @@ module "eks" {
   desired_node_count = 4
   min_node_count     = 4
   env_variables      = { "env" : { "DB_HOST" : "postgresql://example:example@postgres.com:1234", "test2" : "test" } }
+  subnets = module.vpc.ts_aws_subnet_public_igw_map
 }

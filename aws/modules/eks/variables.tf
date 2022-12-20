@@ -79,3 +79,8 @@ variable "stack_name" {
   description = "The value specified in the alb.ingress.kubernetes.io/group.name annotation"
   default     = "stack"
 }
+
+variable "subnets" {
+  type = any
+  description = "List of subnets to use for the EKS cluster."
+}

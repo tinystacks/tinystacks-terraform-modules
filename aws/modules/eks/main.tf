@@ -1,14 +1,11 @@
-module "vpc" {
-  source = "../vpc"
 
-}
 
 resource "aws_eks_cluster" "cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
   version  = "1.20"
   vpc_config {
-    subnet_ids = [for subnet in module.vpc.ts_aws_subnet_public_igw_map : subnet]
+    subnet_ids = [for subnet in var.subnets : subnet]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -52,7 +49,7 @@ resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.cluster.name
   node_group_name = "nodes-${var.cluster_name}"
   node_role_arn   = aws_iam_role.node_group_role.arn
-  subnet_ids      = [for subnet in module.vpc.ts_aws_subnet_public_igw_map : subnet]
+  subnet_ids      = [for subnet in var.subnets : subnet]
   disk_size       = var.node_disk_size
   instance_types  = var.instance_types
   scaling_config {

@@ -1,0 +1,70 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Publish CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Git tag and release
+      id: git_tag_and_release
+      run: |
+        git config --global user.email "zaydsimjee@gmail.com"
+        git config --global user.name "Zayd Simjee"
+        changeType=$(<.version-change-type)
+        if [ -z "$changeType" ]; then echo "Missing file: .version-change-type!"; exit 1; fi
+        git fetch --tags
+        latestVersionTag=$(git tag --sort=committerdate | tail -1)
+        if [ -z "$latestVersionTag" ]; then echo "No version tags on the repository! Defaulting to 0.0.0..."; fi
+        echo "latestVersionTag: $latestVersionTag"
+        currentVersion=${latestVersionTag:-0.0.0}
+        newVersion=$(bash .github/workflows/incrementVersion.sh $currentVersion $changeType)
+        git tag $newVersion
+        git push origin --tags
+        gh release create $newVersion --title $newVersion --notes-file RELEASENOTES.md
+        echo "::set-output name=newVersion::$(echo ${newVersion})"
+      env:
+        GH_TOKEN: ${{ secrets.TS_GH_BOT }}
+    - name: Submit PR for version change and CHANGELOG
+      id: submit_pr
+      run: |
+        newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
+        branchName="v$newVersion"
+        echo "::set-output name=branchName::$(echo ${branchName})"
+        git checkout -b "$branchName"
+        previousChangeLog=$(cat CHANGELOG.md)
+        echo "$newVersion" > CHANGELOG.md
+        echo "---" >> CHANGELOG.md
+        echo "$(cat RELEASENOTES.md)" >> CHANGELOG.md
+        echo " " >> CHANGELOG.md
+        echo "$previousChangeLog" >> CHANGELOG.md
+        echo "" > RELEASENOTES.md
+        echo "$newVersion" > .version
+        git add CHANGELOG.md
+        git add RELEASENOTES.md
+        git add .version
+        git commit -m "version $newVersion [skip ci]"
+        git push --set-upstream origin "$branchName"
+        prTitle="$branchName [skip ci]"
+        gh pr create --title "$prTitle" --body "update version to $newVersion, update CHANGELOG with RELEASENOTES"
+        sleep 5s
+      env:
+        GH_TOKEN: ${{ secrets.TS_GH_BOT }}
+    - name: Approve version change PR and merge
+      run: |
+        newVersion="${{ steps.git_tag_and_release.outputs.newVersion }}"
+        branchName="${{ steps.submit_pr.outputs.branchName }}"
+        git config --global user.email "smohiuddin@gmail.com"
+        git config --global user.name "Safeer Mohiuddin"
+        gh pr review "$branchName" --approve
+        gh pr merge "$branchName" --admin --squash
+      env:
+        GH_TOKEN: ${{ secrets.SAFEER_APPROVER_BOT }}

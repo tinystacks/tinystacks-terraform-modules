@@ -1,0 +1,5 @@
+# Standards to which TF modules should be written
+1. All resource names need to be parameterized using the StackName. Every launch via tinystacks takes place within the context of a `STACK_NAME` env var. We should embed this env var into any statically named resources - including defaults set in variables files. Each variables.tf file should include a `STACK_NAME` variable
+1. For any modules using a regional cloud provider, the region should not be explicitly set in the module. Rather, it will be set at the terraform provider config level by the process deploying the terraform
+    1. For AWS, the env var is named AWS_REGION. use the aws data provider to pull the current region `data "aws_region" "current" {}`
+1. For region specific modules (for example VPCs), we should try hard to make the top-level resource names the only necessary variables from a customer perspective. For example, for a new VPC, customers should only have to specify a region and the AZs etc should be taken care of behind the scenes.

@@ -1,10 +1,3 @@
-variable "hello_world_aws_region" {
-  description = "Hello world AWS region"
-  type        = string
-}
-
-/* */
-
 variable "hello_world_aws_vpc_cidr_block" {
   description = "Hello World AWS VPC CIDR block"
   type        = string
@@ -17,102 +10,19 @@ variable "hello_world_aws_vpc_cidr_newbits" {
   default     = 4
 }
 
-/* */
-
-variable "hello_world_public_igw_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Public IGW subnets"
- 
-  default = {
-    "us-east-1b" = 1
-    "us-east-1d" = 2
-    "us-east-1f" = 3
-  }
+variable "hello_world_slice_azs" {
+    type = bool
+    default = true
 }
 
-/* */
-
-variable "hello_world_private_ngw_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Private NGW subnets"
- 
-  default = {
-    "us-east-1b" = 4
-    "us-east-1d" = 5
-    "us-east-1f" = 6
-  }
+variable "hello_world_slice_start_index" {
+    type = number
+    default = 0
 }
 
-/* */
-
-variable "hello_world_private_isolated_cidr_blocks" {
-  type = map(number)
-  description = "Hello World Availability Zone CIDR Mapping for Private isolated subnets"
- 
-  default = {
-    "us-east-1b" = 7
-    "us-east-1d" = 8
-    "us-east-1f" = 9
-  }
-}
-
-/* */
-
-variable "hello_world_vpc_security_group_rules" {
-  description = "Hello World VPC Security Group rules"
-
-  type = list(object({
-    rule_type   = string
-    description = string
-    from_port   = number
-    to_port     = number
-    protocol    = string
-    cidr_blocks = list(string)
-  }))
-
-  default = [
-    {
-      rule_type   = "ingress"
-      description = "Ping"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "ICMP"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-    {
-      rule_type   = "egress"
-      description = "Outbound"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  ]
-}
-
-/* */
-
-variable "hello_world_aws_ami_filter_name_values" {
-  description = "Hello World AWS AMI filter name:values"
-  type        = list(string)
-  default     = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"] 
-}
-
-variable "hello_world_aws_ami_owners" {
-  description = "Hello World AWS AMI owners"
-  type        = list(string)
-  default     = ["099720109477"] 
-}
-
-variable "hello_world_aws_instance_type" {
-  description = "Hello World AWS Instance type"
-  type        = string
-  default     = "t2.micro"
-}
-
-variable "hello_world_aws_instance_key_name" {
-  description = "Hello World AWS Instance Key Name"
-  type        = string
+variable "hello_world_slice_end_index" {
+    type = number
+    default = 3
 }
 
 /* */
@@ -271,32 +181,6 @@ variable "acme_api_aws_ecs_service_launch_type" {
   default     = "FARGATE"
 }
 
-variable "acme_api_aws_ecs_task_definition_container_definitions" {
-  description = "Acme API AWS ECS task definition container definitions"
-  type        = string
-  default     = <<EOF
-  [
-    {
-      "name": "acme-api",
-      "image": "ajjester/acme-api:latest",
-      "portMappings": [
-        {
-          "containerPort": 3000
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-region": "us-east-1",
-          "awslogs-group": "/ecs/acme-api",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
-  EOF
-}
-
 variable "acme_api_aws_ecs_task_definition_cpu" {
   description = "Acme API AWS ECS task definition cpu"
   type        = number
@@ -327,4 +211,108 @@ variable "acme_api_aws_iam_role_ecs_task_execution_role_name" {
   default     = "ecs-task-execution-role"
 }
 
-/* */
+/* RDS */
+
+variable "hello_world_aws_db_vpc_security_group_rules" {
+  description = "Hello World AWS DB Security Group rules"
+
+  type = list(object({
+    rule_type   = string
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+
+  default = [
+    {
+      rule_type   = "ingress"
+      description = "Postgres"
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      rule_type   = "egress"
+      description = "Outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
+variable "hello_world_aws_db_instance_identifier_name" {
+  description = "Hello World AWS DB Instance idendifier name"
+  type        = string
+  default     = "hwdb1"
+}
+
+variable "hello_world_aws_db_instance_class" {
+  description = "Hello World AWS DB Instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "hello_world_aws_db_instance_allocated_storage" {
+  description = "Hello World AWS DB Instance allocated storage"
+  type        = number
+  default     = 10
+}
+
+variable "hello_world_aws_db_instance_engine" {
+  description = "Hello World AWS DB Instance engine"
+  type        = string
+  default     = "postgres"
+}
+
+variable "hello_world_aws_db_instance_engine_version" {
+  description = "Hello World AWS DB Instance engine version"
+  type        = string
+  default     = "13.7"
+}
+
+variable "hello_world_aws_db_instance_port" {
+  description = "Hello World AWS DB Instance port"
+  type        = number
+  default     = 5432
+}
+
+variable "hello_world_aws_db_instance_skip_final_snapshot" {
+  description = "Hello World AWS DB Instance  skip final snapshot"
+  type        = bool
+  default     = true
+}
+
+variable "hello_world_aws_db_instance_storage_type" {
+  description = "Hello World AWS DB Instance storage type"
+  type        = string
+  default     = "gp2"
+}
+
+variable "hello_world_aws_db_instance_storage_encrypted" {
+  description = "Hello World AWS DB Instance storage encrypted"
+  type        = bool
+  default     = true
+}
+
+variable "hello_world_aws_db_instance_multi_az" {
+  description = "Hello World AWS DB Instance multi az"
+  type        = bool
+  default     = false
+}
+
+variable "hello_world_aws_db_instance_backup_retention_period" {
+  description = "Hello World AWS DB Instance backup retention period"
+  type        = number
+  default     = 7
+}
+
+variable "hello_world_aws_db_instance_username" {
+  description = "Hello World AWS DB Instance username"
+  type        = string
+  default     = "hwuser"
+}

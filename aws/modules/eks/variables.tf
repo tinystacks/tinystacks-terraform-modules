@@ -1,6 +1,3 @@
-variable "cluster_name" {
-  type = string
-}
 
 variable "desired_node_count" {
   type        = number
@@ -74,7 +71,7 @@ variable "AWS_REGION" {
   type = string
 }
 
-variable "stack_name" {
+variable "STACK_NAME" {
   type        = string
   description = "The value specified in the alb.ingress.kubernetes.io/group.name annotation"
   default     = "stack"

@@ -3,7 +3,7 @@ locals {
   values_merged = concat(var.values, [
     {
       name : "clusterName",
-      value : var.cluster_name
+      value : var.STACK_NAME
     },
     {
       name : "serviceAccount.name",
@@ -16,8 +16,10 @@ locals {
 
 data "aws_caller_identity" "current" {}
 
+data "aws_region" "current" {}
+
 resource "aws_iam_policy" "lb_controller_iam_policy" {
-  name        = "${var.cluster_name}-LBController"
+  name        = "${var.STACK_NAME}-LBController"
   path        = "/"
   description = "AWS EKS LB Controller IAM Policy"
 
@@ -243,7 +245,7 @@ resource "aws_iam_policy" "lb_controller_iam_policy" {
 }
 
 resource "aws_iam_role" "lb_controller_role" {
-  name = "${var.cluster_name}-LBControllerRole"
+  name = "${var.STACK_NAME}-LBControllerRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -256,8 +258,8 @@ resource "aws_iam_role" "lb_controller_role" {
         "Action" : "sts:AssumeRoleWithWebIdentity",
         "Condition" : {
           "StringEquals" : {
-            "oidc.eks.${var.region}.amazonaws.com/id/${local.oidc_url[4]}:aud" : "sts.amazonaws.com",
-            "oidc.eks.${var.region}.amazonaws.com/id/${local.oidc_url[4]}:sub" : "system:serviceaccount:kube-system:${local.load_balancer_name}"
+            "oidc.eks.${data.aws_region.current.name}.amazonaws.com/id/${local.oidc_url[4]}:aud" : "sts.amazonaws.com",
+            "oidc.eks.${data.aws_region.current.name}.amazonaws.com/id/${local.oidc_url[4]}:sub" : "system:serviceaccount:kube-system:${local.load_balancer_name}"
           }
         }
       }
